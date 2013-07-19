@@ -1,16 +1,27 @@
 // globals
 var currentDepth = 0;
 var buttonText = "Render Depth ";
+var renderLine = null;
+var renderSize = [800, 400];
+
+// kinetic init
+var renderStage = new Kinetic.Stage({
+	container: 'rendered',
+	width: renderSize[0],
+	height: renderSize[1]
+});
+var renderLayer = new Kinetic.Layer();
+renderStage.add(renderLayer);
 
 $(window).load(function() {
 	updateRenderButton();
-})
+});
 
 function updateRenderButton() {
 	$('#render').text(buttonText + (currentDepth+1).toString());
 	if (template == null || template.attrs.points.length < 2) $('#render').attr('disabled', 'disabled');
 	else $('#render').removeAttr('disabled');
-}
+};
 
 function disableTemplating() {
 	// disable templating mechanics
@@ -38,17 +49,33 @@ function enableTemplating() {
 		templateCircles[c].setFill("black");
 	}
 	templateLayer.draw();
-}
+};
 
 function renderNextDepth() {
 	// disable button for overeager users
 	$('#render').attr('disabled', 'disabled');
 	
+	// create render if null
+	if (renderLine == null) {
+		renderLine = new Kinetic.Line({
+			points: [0, 0],
+			stroke: 'purple',
+			strokeWidth: 3,
+			lineCap: 'round',
+			lineJoin: 'round'
+		});
+		// update & add
+		renderLine.attrs.points = template.attrs.points.slice(); // copy template
+		renderLine.move((renderSize[0] - templateSize[0])/2, (renderSize[1] - templateSize[1])/2); // center
+		renderLayer.add(renderLine);
+	}
 	
+	// render
+	renderLayer.draw();
 	// update depth & button
 	currentDepth++;
 	updateRenderButton();
-}
+};
 
 $('#render').click(function() {
 	disableTemplating();
@@ -56,6 +83,12 @@ $('#render').click(function() {
 });
 
 $('#clear-render').click(function() {
+	// clear display
+	renderLayer.removeChildren();
+	renderLine = null;
+	renderLayer.draw();
+	
+	// reset depth & enable
 	currentDepth = 0;
 	updateRenderButton();
 	enableTemplating();

@@ -2,12 +2,13 @@
 var template = null;
 var templateCircles = new Array();
 var drawingEnabled = true;
+var templateSize = [400, 200];
 
 // kinetic init
 var stage = new Kinetic.Stage({
 	container: 'template',
-	width: 400,
-	height: 200
+	width: templateSize[0],
+	height: templateSize[1]
 });
 var templateLayer = new Kinetic.Layer();
 stage.add(templateLayer);
