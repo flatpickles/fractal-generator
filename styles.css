@@ -1,33 +1,52 @@
 body {
+	background-color: #c0d8da;
 }
 
 #header {
 	font-size: 2em;
 	text-align: center;
+	padding: 20px;
 }
 
 #wrapper {
-	width: 820px;
+	width: 804px;
 	margin: auto;
 }
 
 #controls {
-	border: 1px dotted;
+	border-left: 1px dotted;
+	border-top: 1px dotted;
 	height: 200;
 	width: 400px;
-	margin: 10px auto;
+	float: left;
+	background-color: #d6f0f2;
+}
+
+#controls-internal {
+	width: 380px;
+	height: 180px;
+	padding: 10px;
 }
 
 #template {
-	border: 1px dashed;
-	height: 400px;
-	width: 800px;
-	margin: 10px;
+	border-right: 1px dotted;
+	border-top: 1px dotted;
+	border-left: 2px dashed;
+	height: 200px;
+	width: 400px;
+	float: right;
+	clear: right;
+	background-color: #dffdff;
+}
+
+#clear {
+	clear: both;
 }
 
 #rendered {
-	border: 1px solid;
+	border: 2px solid;
 	height: 400px;
 	width: 800px;
-	margin: 10px;
+	margin: 0px;
+	background-color: #efffff;
 }

@@ -1,17 +1,20 @@
 // globals
 var template = null;
-var circles = new Array();
+var templateCircles = new Array();
+var drawingEnabled = true;
 
 // kinetic init
 var stage = new Kinetic.Stage({
 	container: 'template',
-	width: 800,
-	height: 400
+	width: 400,
+	height: 200
 });
-var layer = new Kinetic.Layer();
-stage.add(layer);
+var templateLayer = new Kinetic.Layer();
+stage.add(templateLayer);
 
 $('#template').click(function(e) {
+	// disable if drawingEnabled == false
+	if (!drawingEnabled) return;
 	// parse event points
 	var xPt = e.pageX-$('#template').offset().left;
 	var yPt = e.pageY-$('#template').offset().top;
@@ -25,7 +28,7 @@ $('#template').click(function(e) {
 			lineCap: 'round',
 			lineJoin: 'round'
 		});
-		layer.add(template);
+		templateLayer.add(template);
 	} else {
 		template.attrs.points.push({x:xPt, y:yPt});
 	}
@@ -38,19 +41,22 @@ $('#template').click(function(e) {
 		fill: 'black',
 		strokeWidth: 0
 	});
-	layer.add(c);
-	circles.push(c);
-	
+	templateLayer.add(c);
+	templateCircles.push(c);
 	// render
-	layer.draw();
+	templateLayer.draw();
+	// update button
+	updateRenderButton();
 });
 
 // remove current template & restart
 $('#clear').click(function() {
-	layer.removeChildren();
+	templateLayer.removeChildren();
 	template = null;
-	circles = new Array();
-	layer.draw();
+	templateCircles = new Array();
+	templateLayer.draw();
+	// update button
+	updateRenderButton();
 });
 
 // remove last segment of the template
@@ -61,9 +67,11 @@ $('#undo').click(function() {
 		$('#clear').click();
 	} else {
 		// remove last circle and line point
-		var c = circles.pop();
+		var c = templateCircles.pop();
 		c.remove();
 		template.attrs.points.pop();
-		layer.draw();
+		templateLayer.draw();
+		// update
+		updateRenderButton();
 	}
 });

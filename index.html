@@ -3,7 +3,9 @@
 	<head>
 	
 		<title>Fractals</title>
+		<link href="reset.css" rel="stylesheet" type="text/css">
 		<link href="styles.css" rel="stylesheet" type="text/css">
+		
 		
 	</head>
 	
@@ -19,11 +21,25 @@
 			
 			<div id="main">
 				<div id="controls">
-					<button id="clear">Clear Template</button>
-					<button id="undo">Undo Last Segment</button>
+					<div id="controls-internal">
+						Got some instructions! Got some instructions! Got some instructions! Got some instructions! Got some instructions! Got some instructions!  Got some instructions!
+						
+						<br><br>
+						
+						<button id="clear">Clear Template</button>
+						<button id="undo">Undo Last Segment</button>
+						
+						<br><br>
+						
+						<button id="render" disabled="disabled">Go Deeper</button>
+						<progress value="100" max="100"></progress>
+						<button id="clear-render" disabled="disabled">Clear Render</button>
+					</div>
 				</div>
 				
 				<div id="template"></div>
+				
+				<div id="clear"></div>
 				
 				<div id="rendered"></div>
 				
@@ -37,4 +53,5 @@
 	<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.5.4.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="draw.js"></script>
+	<script src="render.js"></script>
 </html>
