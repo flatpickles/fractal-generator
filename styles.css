@@ -22,6 +22,14 @@ body {
 	background-color: #d6f0f2;
 }
 
+button {
+	width: 100%;
+}
+
+td {
+	padding-right: 10px;
+}
+
 #controls-internal {
 	width: 380px;
 	height: 180px;
