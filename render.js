@@ -8,10 +8,18 @@ var renderSize = [800, 400];
 var renderStage = new Kinetic.Stage({
 	container: 'rendered',
 	width: renderSize[0],
-	height: renderSize[1]
+	height: renderSize[1],
+	draggable: true
 });
 var renderLayer = new Kinetic.Layer();
 renderStage.add(renderLayer);
+
+// set up zoom
+function zoom(e) {
+	if (renderLine == null) return;
+	var z = e.wheelDeltaY * 0.001;
+	renderLayer.setScale(renderLayer.getScale().x + z);
+};
 
 $(window).load(function() {
 	updateRenderButton();
@@ -57,6 +65,10 @@ function renderNextDepth() {
 	
 	// create render if null
 	if (renderLine == null) {
+		// reset drag & zoom offsets of stage
+		renderStage.setAbsolutePosition({x:0, y:0})
+		renderStage.drawScene();
+		// create the line
 		renderLine = new Kinetic.Line({
 			points: [0, 0],
 			stroke: 'purple',
