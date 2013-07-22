@@ -10,7 +10,7 @@ var renderStage = new Kinetic.Stage({
 	container: 'rendered',
 	width: renderSize[0],
 	height: renderSize[1],
-/* 	draggable: true */
+	draggable: false
 });
 var renderLayer = new Kinetic.Layer({
 	draggable: true
@@ -22,6 +22,7 @@ renderStage.add(renderLayer);
 var zoomUI = {
 	stage: renderStage,
 	line: renderLine,
+	zoomSpeed: 1/300,
 	scale: 1,
 	zoomFactor: 1.1,
 	origin: {
@@ -34,7 +35,7 @@ var zoomUI = {
 		var evt = e.originalEvent,
 			mx = evt.offsetX,
 			my = evt.offsetY,
-			wheel = evt.wheelDelta / 120;
+			wheel = evt.wheelDelta * zoomUI.zoomSpeed;
 		var zoom = (zoomUI.zoomFactor - (evt.wheelDelta < 0 ? 0.2 : 0)); // zoom out more slowly
 		var newScale = zoomUI.scale * zoom;
 		zoomUI.origin.x = mx / zoomUI.scale + zoomUI.origin.x - mx / newScale;
@@ -60,6 +61,17 @@ var zoomUI = {
 	}
 }
 $(renderStage.content).on('mousewheel', zoomUI.zoom);
+
+// add a background object so drag-to-pan is possible from any point
+var bg = new Kinetic.Rect({
+	x: -1000000,
+	y: -1000000,
+	width: 2000000,
+	height: 2000000,
+	fill: 'white',
+	opacity: 0
+});
+renderLayer.add(bg);
 
 $(window).load(function() {
 	updateRenderButton();
@@ -107,6 +119,7 @@ function renderNextDepth() {
 	if (renderLine == null) {
 		// reset drag & zoom offsets of stage
 		zoomUI.reset();
+		renderLayer.setAbsolutePosition(0, 0);
 		// create the line
 		renderLine = new Kinetic.Line({
 			points: [0, 0],
@@ -184,6 +197,7 @@ $('#render').click(function() {
 $('#clear-render').click(function() {
 	// clear display
 	renderLayer.removeChildren();
+	renderLayer.add(bg); // add back bg for panning
 	renderLine = null;
 	renderLayer.draw();
 	
