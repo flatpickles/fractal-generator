@@ -3,23 +3,63 @@ var currentDepth = 0;
 var buttonText = "Render Depth ";
 var renderLine = null;
 var renderSize = [800, 400];
+var lineSize = 2;
 
 // kinetic init
 var renderStage = new Kinetic.Stage({
 	container: 'rendered',
 	width: renderSize[0],
 	height: renderSize[1],
+/* 	draggable: true */
+});
+var renderLayer = new Kinetic.Layer({
 	draggable: true
 });
-var renderLayer = new Kinetic.Layer();
 renderStage.add(renderLayer);
 
-// set up zoom
-function zoom(e) {
-	if (renderLine == null) return;
-	var z = e.wheelDeltaY * 0.001;
-	renderLayer.setScale(renderLayer.getScale().x + z);
-};
+// handle zooming to a point
+// adapted from http://stackoverflow.com/questions/12372475/scaling-to-a-fixed-point-in-kineticjs
+var zoomUI = {
+	stage: renderStage,
+	line: renderLine,
+	scale: 1,
+	zoomFactor: 1.1,
+	origin: {
+		x: 0,
+		y: 0
+	},
+	zoom: function(e) {
+		e.preventDefault();
+		// move stage to zoom to cursor location
+		var evt = e.originalEvent,
+			mx = evt.offsetX,
+			my = evt.offsetY,
+			wheel = evt.wheelDelta / 120;
+		var zoom = (zoomUI.zoomFactor - (evt.wheelDelta < 0 ? 0.2 : 0)); // zoom out more slowly
+		var newScale = zoomUI.scale * zoom;
+		zoomUI.origin.x = mx / zoomUI.scale + zoomUI.origin.x - mx / newScale;
+		zoomUI.origin.y = my / zoomUI.scale + zoomUI.origin.y - my / newScale;
+		zoomUI.stage.setOffset(zoomUI.origin.x, zoomUI.origin.y);
+		zoomUI.stage.setScale(newScale);
+		zoomUI.scale *= zoom;
+		// resize line appropriately
+		if (renderLine != null) renderLine.setStrokeWidth(lineSize / zoomUI.scale);
+		// render
+		zoomUI.stage.draw();
+	},
+	reset: function() {
+		// reset UI vars
+		zoomUI.scale = 1;
+		zoomUI.origin = {
+			x: 0,
+			y: 0
+		};
+		// reset stage
+		zoomUI.stage.setScale(1);
+		zoomUI.stage.setOffset(0, 0);
+	}
+}
+$(renderStage.content).on('mousewheel', zoomUI.zoom);
 
 $(window).load(function() {
 	updateRenderButton();
@@ -66,13 +106,12 @@ function renderNextDepth() {
 	// create render if null
 	if (renderLine == null) {
 		// reset drag & zoom offsets of stage
-		renderStage.setAbsolutePosition({x:0, y:0})
-		renderStage.drawScene();
+		zoomUI.reset();
 		// create the line
 		renderLine = new Kinetic.Line({
 			points: [0, 0],
 			stroke: 'purple',
-			strokeWidth: 2,
+			strokeWidth: lineSize,
 			lineCap: 'round',
 			lineJoin: 'round'
 		});
