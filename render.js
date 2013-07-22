@@ -1,9 +1,12 @@
 // globals
 var currentDepth = 0;
-var buttonText = "Render Depth ";
+var buttonText = "Render Iteration ";
+var maxText = 'Max Iteration: ';
 var renderLine = null;
 var renderSize = [800, 400];
 var lineSize = 2;
+var blockNext = false;
+var maxPoints = 20000;
 
 // kinetic init
 var renderStage = new Kinetic.Stage({
@@ -36,7 +39,7 @@ var zoomUI = {
 			mx = evt.offsetX,
 			my = evt.offsetY,
 			wheel = evt.wheelDelta * zoomUI.zoomSpeed;
-		var zoom = (zoomUI.zoomFactor - (evt.wheelDelta < 0 ? 0.2 : 0)); // zoom out more slowly
+		var zoom = (zoomUI.zoomFactor - (evt.wheelDelta > 0 ? 0.2 : 0)); // zoom out more slowly
 		var newScale = zoomUI.scale * zoom;
 		zoomUI.origin.x = mx / zoomUI.scale + zoomUI.origin.x - mx / newScale;
 		zoomUI.origin.y = my / zoomUI.scale + zoomUI.origin.y - my / newScale;
@@ -80,7 +83,11 @@ $(window).load(function() {
 function updateRenderButton() {
 	$('#render').text(buttonText + (currentDepth+1).toString());
 	if (template == null || template.attrs.points.length < 2) $('#render').attr('disabled', 'disabled');
-	else $('#render').removeAttr('disabled');
+	else if (renderLine == null || renderLine.attrs.points.length < maxPoints) $('#render').removeAttr('disabled');
+	else {
+		$('#render').attr('disabled', 'disabled');
+		$('#render').text(maxText + currentDepth.toString());
+	}
 };
 
 function disableTemplating() {
@@ -112,9 +119,6 @@ function enableTemplating() {
 };
 
 function renderNextDepth() {
-	// disable button for overeager users
-	$('#render').attr('disabled', 'disabled');
-	
 	// create render if null
 	if (renderLine == null) {
 		// reset drag & zoom offsets of stage
@@ -150,8 +154,6 @@ function renderNextDepth() {
 		}
 		// create new points array
 		var newPoints = new Array();
-		var totalSegs = (renderLine.attrs.points.length - 1) * (template.attrs.points.length - 2);
-		var curSegs = 0;
 		for (var p = 0; p < renderLine.attrs.points.length - 1; p++) {
 			// get info for segment
 			var p1 = renderLine.attrs.points[p];
@@ -176,8 +178,6 @@ function renderNextDepth() {
 				newPoint.y += p1.y;
 				// add
 				newPoints.push(newPoint);
-				// fill progress bar
-				curSegs++;
 			}
 		}
 		// add back last point
@@ -191,9 +191,14 @@ function renderNextDepth() {
 	// update depth & button
 	currentDepth++;
 	updateRenderButton();
+	blockNext = false;
 };
 
 $('#render').click(function() {
+	// don't let overeager users click too much
+	if (blockNext) return;
+	else blockNext = true;
+	// go go go
 	disableTemplating();
 	renderNextDepth();
 });
