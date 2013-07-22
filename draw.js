@@ -20,7 +20,7 @@ var stage = new Kinetic.Stage({
 var templateLayer = new Kinetic.Layer();
 stage.add(templateLayer);
 
-
+// grey out and disable templating
 function disableTemplating() {
 	// disable templating mechanics
 	drawingEnabled = false;
@@ -33,8 +33,11 @@ function disableTemplating() {
 		templateCircles[c].setFill(disabledVertexColor);
 	}
 	templateLayer.draw();
+	// enable exporting
+	$('#export').removeAttr('disabled');
 };
 
+// resume templating
 function enableTemplating() {
 	// enable templating mechanics
 	drawingEnabled = true;
@@ -47,8 +50,11 @@ function enableTemplating() {
 		templateCircles[c].setFill(vertexColor);
 	}
 	templateLayer.draw();
+	// disable exporting
+	$('#export').attr('disabled', 'disabled');
 };
 
+// bindings
 $(window).load(function() {
 	$('#template').click(function(e) {
 		// disable if drawingEnabled == false
