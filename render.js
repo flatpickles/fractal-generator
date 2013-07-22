@@ -140,6 +140,14 @@ function renderNextDepth() {
 		var tp2 = template.attrs.points[template.attrs.points.length-1];
 		var tempDist = Math.sqrt(Math.pow(tp2.x - tp1.x, 2) + Math.pow(tp2.y - tp1.y, 2));
 		var tempRotation = Math.atan2(tp2.y - tp1.y, tp2.x - tp1.x);
+		// create a pre-rotated template array, normalized for scaling
+		var rTemp = new Array();
+		for (var t = 1; t < template.attrs.points.length - 1; t++) {
+			var pt = {x:template.attrs.points[t].x - tp1.x, y:template.attrs.points[t].y - tp1.y};
+			var newX = Math.cos(-tempRotation) * (pt.x) - Math.sin(-tempRotation) * (pt.y);
+			var newY = Math.sin(-tempRotation) * (pt.x) + Math.cos(-tempRotation) * (pt.y);
+			rTemp.push({x:newX, y:newY});
+		}
 		// create new points array
 		var newPoints = new Array();
 		var totalSegs = (renderLine.attrs.points.length - 1) * (template.attrs.points.length - 2);
@@ -154,12 +162,8 @@ function renderNextDepth() {
 			// add current point
 			newPoints.push({x:p1.x, y:p1.y});
 			// iterate through template, adding points accordingly
-			for (var t = 1; t < template.attrs.points.length - 1; t++) {
-				var newPoint = {x:template.attrs.points[t].x - tp1.x, y:template.attrs.points[t].y - tp1.y}; 
-				// rotate around origin to normalize
-				var newX = Math.cos(-tempRotation) * (newPoint.x) - Math.sin(-tempRotation) * (newPoint.y);
-				var newY = Math.sin(-tempRotation) * (newPoint.x) + Math.cos(-tempRotation) * (newPoint.y);
-				newPoint = {x:newX, y:newY};
+			for (var t = 0; t < rTemp.length; t++) {
+				var newPoint = {x:rTemp[t].x, y:rTemp[t].y};
 				// scale
 				newPoint.x *= scale;
 				newPoint.y *= scale;
