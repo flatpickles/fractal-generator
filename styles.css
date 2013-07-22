@@ -3,7 +3,7 @@ body {
 }
 
 #header {
-	font-size: 2em;
+	font-size: 2.5em;
 	text-align: center;
 	padding: 20px;
 }
@@ -58,4 +58,19 @@ td {
 	width: 800px;
 	margin: 0px;
 	background-color: #fafafa;
+}
+
+#footer {
+	text-align: right;
+	padding: 20px;
+	color: #b9beae;
+}
+
+a.footer {
+	color: #babfaf;
+	text-decoration: none;
+}
+
+a.footer:hover {
+	text-decoration: underline;
 }
