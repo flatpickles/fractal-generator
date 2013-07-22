@@ -3,7 +3,6 @@ var currentDepth = 0;
 var buttonText = "Render Iteration ";
 var maxText = 'Max Iteration: ';
 var renderLine = null;
-var renderSize = [800, 400];
 var lineSize = 2;
 var blockNext = false;
 var maxPoints = 20000;
@@ -11,8 +10,8 @@ var maxPoints = 20000;
 // kinetic init
 var renderStage = new Kinetic.Stage({
 	container: 'rendered',
-	width: renderSize[0],
-	height: renderSize[1],
+	width: $('#rendered').width(),
+	height: $('#rendered').height(),
 	draggable: false
 });
 var renderLayer = new Kinetic.Layer({
@@ -71,15 +70,12 @@ var bg = new Kinetic.Rect({
 	y: -1000000,
 	width: 2000000,
 	height: 2000000,
-	fill: 'white',
+	fill: '#ffffff',
 	opacity: 0
 });
 renderLayer.add(bg);
 
-$(window).load(function() {
-	updateRenderButton();
-});
-
+// reflect iterations, limit etc in button text
 function updateRenderButton() {
 	$('#render').text(buttonText + (currentDepth+1).toString());
 	if (template == null || template.attrs.points.length < 2) $('#render').attr('disabled', 'disabled');
@@ -90,34 +86,7 @@ function updateRenderButton() {
 	}
 };
 
-function disableTemplating() {
-	// disable templating mechanics
-	drawingEnabled = false;
-	$('#clear').attr('disabled', 'disabled');
-	$('#undo').attr('disabled', 'disabled');
-	$('#clear-render').removeAttr('disabled');
-	// change colors of render
-	template.setStroke("#C0C0C0");
-	for (var c = 0; c < templateCircles.length; c++) {
-		templateCircles[c].setFill("#808080");
-	}
-	templateLayer.draw();
-};
-
-function enableTemplating() {
-	// enable templating mechanics
-	drawingEnabled = true;
-	$('#clear').removeAttr('disabled');
-	$('#undo').removeAttr('disabled');
-	$('#clear-render').attr('disabled', 'disabled');
-	// change colors of render
-	template.setStroke("red");
-	for (var c = 0; c < templateCircles.length; c++) {
-		templateCircles[c].setFill("black");
-	}
-	templateLayer.draw();
-};
-
+// the brains AND the brawn
 function renderNextDepth() {
 	// create render if null
 	if (renderLine == null) {
@@ -127,14 +96,14 @@ function renderNextDepth() {
 		// create the line
 		renderLine = new Kinetic.Line({
 			points: [0, 0],
-			stroke: 'purple',
+			stroke: lineColor,
 			strokeWidth: lineSize,
 			lineCap: 'round',
 			lineJoin: 'round'
 		});
 		// update & add
 		renderLine.attrs.points = template.attrs.points.slice(); // copy template
-		renderLine.move((renderSize[0] - templateSize[0])/2, (renderSize[1] - templateSize[1])/2); // center
+		renderLine.move(($('#rendered').width() - $('#template').width())/2, ($('#rendered').height() - $('#template').height())/2); // center
 		renderLayer.add(renderLine);
 	} 
 	// otherwise, take the plunge
@@ -194,24 +163,45 @@ function renderNextDepth() {
 	blockNext = false;
 };
 
-$('#render').click(function() {
-	// don't let overeager users click too much
-	if (blockNext) return;
-	else blockNext = true;
-	// go go go
-	disableTemplating();
-	renderNextDepth();
-});
-
-$('#clear-render').click(function() {
-	// clear display
-	renderLayer.removeChildren();
-	renderLayer.add(bg); // add back bg for panning
-	renderLine = null;
-	renderLayer.draw();
-	
-	// reset depth & enable
-	currentDepth = 0;
+// bind stuff
+$(window).load(function() {
 	updateRenderButton();
-	enableTemplating();
+	
+	// handle image export
+	$('#export').click(function() {
+		bg.attrs.opacity = 1;
+		renderStage.toDataURL({
+		    callback: function(d){
+		      // do something with the data url
+		      window.open(d, "export", "height=" + $('#rendered').height().toString() + ",width=" + $('#rendered').width().toString());
+		      bg.attrs.opacity = 0;
+		    },
+		    mimeType: 'image/gif',
+		    quality: 1
+		  });
+	});
+	
+	// handle render control
+	$('#render').click(function() {
+		// don't let overeager users click too much
+		if (blockNext) return;
+		else blockNext = true;
+		// go go go
+		disableTemplating();
+		renderNextDepth();
+	});
+	
+	// clear the render panel
+	$('#clear-render').click(function() {
+		// clear display
+		renderLayer.removeChildren();
+		renderLayer.add(bg); // add back bg for panning
+		renderLine = null;
+		renderLayer.draw();
+		
+		// reset depth & enable
+		currentDepth = 0;
+		updateRenderButton();
+		enableTemplating();
+	});
 });

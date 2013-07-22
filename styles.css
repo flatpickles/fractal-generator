@@ -1,5 +1,5 @@
 body {
-	background-color: #c0d8da;
+	background-color: #ebf0e0;
 }
 
 #header {
@@ -11,15 +11,6 @@ body {
 #wrapper {
 	width: 804px;
 	margin: auto;
-}
-
-#controls {
-	border-left: 1px dotted;
-	border-top: 1px dotted;
-	height: 200;
-	width: 400px;
-	float: left;
-	background-color: #d6f0f2;
 }
 
 button {
@@ -40,25 +31,35 @@ td {
 	padding: 10px;
 }
 
-#template {
-	border-right: 1px dotted;
-	border-top: 1px dotted;
-	border-left: 2px dashed;
-	height: 200px;
-	width: 400px;
-	float: right;
-	clear: right;
-	background-color: #dffdff;
-}
-
 #clear {
 	clear: both;
 }
 
+#controls {
+	border-left: 2px solid;
+	border-top: 2px solid;
+	height: 200;
+	width: 399px;
+	float: left;
+	background-color: #e4f0ef;
+}
+
+
+#template {
+	border-right: 2px solid;
+	border-top: 2px solid;
+	border-left: 2px solid;
+	height: 200px;
+	width: 399px;
+	float: right;
+	clear: right;
+	background-color: #eef8f7;
+}
+
 #rendered {
 	border: 2px solid;
-	height: 400px;
+	height: 480px;
 	width: 800px;
 	margin: 0px;
-	background-color: #efffff;
+	background-color: #fafafa;
 }
