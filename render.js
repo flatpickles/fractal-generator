@@ -169,16 +169,14 @@ $(window).load(function() {
 	
 	// handle image export
 	$('#export').click(function() {
+		// create white background
 		bg.attrs.opacity = 1;
-		renderStage.toDataURL({
-		    callback: function(d){
-		      // do something with the data url
-		      window.open(d, "export", "height=" + $('#rendered').height().toString() + ",width=" + $('#rendered').width().toString());
-		      bg.attrs.opacity = 0;
-		    },
-		    mimeType: 'image/gif',
-		    quality: 1
-		  });
+		renderLayer.draw();
+		// download
+		Canvas2Image.saveAsPNG(renderLayer.getCanvas());
+		// remove white background
+		bg.attrs.opacity = 0;
+		renderLayer.draw();
 	});
 	
 	// handle render control
