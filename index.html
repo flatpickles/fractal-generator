@@ -15,19 +15,17 @@
 		
 			<div id="header">
 			
-				line fractal generator
+				Line Fractal Generator
 			
 			</div>
 			
 			<div id="main">
 				<div id="controls">
 					<div id="controls-internal">
-						Got some instructions! Got some instructions! Got some instructions! Got some instructions! Got some instructions! Got some instructions!  Got some instructions!
-						
-						<br><br>
+						Using the space to the right, draw out a simple path of line segments (three to seven vertices work best). With each render iteration, a scaled and rotated copy of the shape you've drawn replaces each segment of the previous render. Use your mouse to zoom and pan the viewing panel below, but keep in mind that more complex fractals may affect your browser's performance.  
 						
 						<center>
-						<table border="0">
+						<table border="0" id="control-panel">
 							<tr>
 								<td>Drawing:</td>
 								<td><button id="clear">Clear Template</button></td>
@@ -39,7 +37,7 @@
 								<td><button id="render" disabled="disabled">Render Depth 1</button></td>
 							</tr>
 							<tr>
-								<td colspan="2"></td>
+								<td colspan="2">Save Image of Render:</td>
 								<td>
 									<button id="export" disabled="disabled">Download Render</button>
 								</td>
