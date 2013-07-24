@@ -6,4 +6,4 @@ This is an HTML5 app which can recursively generate some pretty swell looking li
 
 Credit where credit is due: my buddy from back in the day Craig (http://www.craigm.info) once made something similar to this as a desktop program (using REALbasic, if I recall). I didn't use any of his code, but hey, ideas mean a lot.
 
-I was surprised to find that this works in the latest IE, so that's cool. However, it probably won't work in most older browsers, as it relies on HTML5 canvas support for the graphics. As always, I recommend the most recent version of Google Chrome for all things.
+I was surprised to find that this works in the latest IE, so that's cool. However, it probably won't work in most older browsers, as it relies on HTML5 canvas support for graphics. As always, I recommend the most recent version of Google Chrome for all things.
