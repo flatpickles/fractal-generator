@@ -1,6 +1,5 @@
 Line Fractal Generator
 Matt Nichols, July 2013
-http://nichols.in/fractals
 
 This is an HTML5 app which can recursively generate some pretty swell looking line fractals from a user-provided template. I'm using KineticJS for graphics and jQuery for interactivity (naturally). It should be relatively efficient, but that said, browsers can only handle so much data, so it'll freeze up at a certain point. I've set a reasonably optimistic upper bound for fractal complexity, but some users may experience hangups before reaching this point. We await browsers of the future with open arms.
 
